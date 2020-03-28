@@ -10,8 +10,9 @@
     "tslib-cli": "./index.js"
   },
   "author": "takumus <me@takum.us> (https://takum.us)",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
+    "@takumus/typescript-library-template": "^1.0.1",
     "path": "^0.12.7",
     "readline-sync": "^1.4.10"
   }

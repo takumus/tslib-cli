@@ -2,84 +2,97 @@
 const rl = require('readline-sync');
 const fs = require('fs');
 const path = require('path');
+const generators = require('./generators');
 
-const options = {
-  projectName: '',
-  browserGlobalName: '',
-  destDir: './dist',
-  entryFile: './src/index.ts',
-  entryFileName: '',
-  entryDir: ''
-}
 const projectRootDir = process.cwd();
 
-function init() {
+function init(options) {
   console.log(`create library at : ${projectRootDir}`);
   options.projectName = path.basename(projectRootDir);
 }
-function input() {
+function input(options) {
   // input projectName
-  options.projectName = readlineStr(`project name(${options.projectName}):`, options.projectName).toLowerCase();
+  options.projectName = readlineStr('project name', options.projectName).toLowerCase();
   // input destDir
-  options.destDir = readlineStr(`destination dir(${options.destDir}):`, options.destDir);
+  options.destDir = readlineStr('destination dir', options.destDir);
   // input browserGlobalName
   const tmpBGN = toCamelCase(options.projectName);
-  options.browserGlobalName = readlineStr(`global name for browser(${tmpBGN}):`, toCamelCase(tmpBGN));
+  options.browserGlobalName = readlineStr('global name for browser', tmpBGN);
   // input entryFile
-  options.entryFile = readlineStr(`entry file(${options.entryFile}):`, options.entryFile);
+  options.entryFile = readlineStr('entry file', options.entryFile);
+  // input author
+  options.author.name = readlineStr('author.name', options.author.name);
+  // input email
+  options.author.email = readlineStr('author.email', options.author.name);
 }
-function beforeGenerate() {
+function beforeGenerate(options) {
   // create entryFileName from entryFile
   options.entryFileName = path.basename(options.entryFile, path.extname(options.entryFile));
   // create entryDir from entryFile
   options.entryDir = path.dirname(options.entryFile);
 }
-function generate() {
-  fs.readdirSync(path.resolve(__dirname, './template'))
-    .forEach((fileName) => {
-      // replace
-      const body = Object.keys(options).reduce(
-        (body, key) => {
-          return body.replace(new RegExp(`{{{${key}}}}`, 'g'), options[key]);
-        },
-        fs.readFileSync(path.resolve(__dirname, `./template/${fileName}`)).toString()
-      )
-      // save
-      fs.writeFileSync(
-        path.resolve(projectRootDir, fileName.replace(/\.template/, '')),
-        body,
-        {
-          encoding: 'utf8'
-        }
-      );
-    });
+function generateAll(options) {
+  // generate files
+  generate("package.json", generators.packageJSON, options);
+  generate("tsconfig.json", generators.tsConfigJSON, options);
+  generate(".npmignore", generators.npmIgnore, options);
+  generate(".gitignore", generators.gitIgnore, options);
+  // copy files
+  generate("rollup-base.config.js", generators.nothing, options);
+  generate("rollup-browser.config.js", generators.nothing, options);
+  generate("rollup.config.js", generators.nothing, options);
+  generate(".babelrc", generators.nothing, options);
+
+  // create tsfile and src directories
   const entryDir = path.resolve(projectRootDir, path.dirname(options.entryFile));
-  if (!fs.existsSync(entryDir)) {
-    fs.mkdirSync(entryDir, { recursive: true });
-    fs.writeFileSync(path.resolve(projectRootDir, options.entryFile), '');
-  }
+  if (!fs.existsSync(entryDir)) fs.mkdirSync(entryDir, { recursive: true });
+  const tsFile = path.resolve(projectRootDir, options.entryFile);
+  if (!fs.existsSync(tsFile)) fs.writeFileSync(tsFile, '', {});
 }
-function afterGenerate() {
-  readlineStr('complete!\nyou should run `npm install` and `npm run build`', '');
+function afterGenerate(options) {
+  console.log('complete!\nyou should run `npm install` and `npm run build`');
 }
+
 function readlineStr(message, defaultInput) {
-  const value = rl.question(message, {
+  const value = rl.question(`${message}(${defaultInput}):`, {
     defaultInput: defaultInput
   });
   return value === '' ? defaultInput : value;
 }
-// function readlineBool(message, defaultInput) {
-//   const value = rlStr(message, defaultInput ? 'y' : 'n');
-//   return /y|Y/.test(value);
-// }
-// function boolToYN(value) {
-//   return value ? 'yes' : 'no';
-// }
+function generate(name, generator, options) {
+  const file = path.resolve(__dirname, './node_modules/@takumus/typescript-library-template', name);
+  let body = '';
+  try {
+    body = fs.readFileSync(file).toString();
+  }catch {}
+  fs.writeFileSync(
+    path.resolve(projectRootDir, name),
+    generator(
+      body,
+      options
+    )
+  );
+}
 function toCamelCase(value) {
   return value.split("-").map((v) => v.charAt(0).toUpperCase() + v.substr(1)).join('');
 }
-init();
-input();
-beforeGenerate();
-generate();
-afterGenerate();
+
+(() => {
+  const options = {
+    projectName: '',
+    browserGlobalName: '',
+    destDir: './dist',
+    entryFile: './src/index.ts',
+    entryFileName: '',
+    entryDir: '',
+    author: {
+      name: '',
+      email: ''
+    }
+  };
+  init(options);
+  input(options);
+  beforeGenerate(options);
+  generateAll(options);
+  afterGenerate(options);
+})();
