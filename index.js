@@ -1,23 +1,35 @@
 #!/usr/bin/env node
+const argv = require('argv');
 const fs = require('fs');
 const path = require('path');
 const generators = require('./generators');
 const utils = require('./utils');
 const readline = require('./readline');
-
-const projectRootDir = process.cwd();
+//
+const mkdirName = argv.run().targets[0] || '';
+const projectRootDir = path.resolve(process.cwd(), mkdirName);
 const libraryTemplateDir = './node_modules/@takumus/typescript-library-template'
 const configFile = path.resolve(projectRootDir, 'tslib-cli.json');
 function init(options) {
-  console.log(`create library at : ${projectRootDir}`);
   // generate projectName from dir path
   options.projectName = path.basename(projectRootDir);
+  // load old settings if exists
+  if (fs.existsSync(configFile)) {
+    try {
+      // extract
+      const old = JSON.parse(fs.readFileSync(configFile));
+      Object.keys(old).forEach((key) => {
+        options[key] = old[key];
+      });
+      console.log(`edit library at : ${projectRootDir}`);
+      return;
+    }catch{}
+  }
+  console.log(`create library at : ${projectRootDir}`);
 }
 
 async function input(options) {
-  // open input
   readline.open();
-
   options.projectName = (await readline.str('project name', options.projectName)).toLowerCase();
   options.destDir = (await readline.str('destination dir', options.destDir));
   // generate default browserGlobalName from projectName
@@ -25,8 +37,6 @@ async function input(options) {
   options.entryFile = (await readline.str('entry file', options.entryFile));
   options.author.name = (await readline.str('author.name', options.author.name));
   options.author.email = (await readline.str('author.email', options.author.email));
-
-  // open input
   readline.close();
 }
 
@@ -38,17 +48,18 @@ function beforeGenerate(options) {
 }
 
 function generateAll(options) {
+  // create project root directories
+  if (!fs.existsSync(projectRootDir)) fs.mkdirSync(projectRootDir, { recursive: true });
   // generate files
-  generate("package.json", generators.packageJSON, options);
-  generate("tsconfig.json", generators.tsConfigJSON, options);
-  generate(".npmignore", generators.npmIgnore, options);
-  generate(".gitignore", generators.gitIgnore, options);
+  generate('package.json', generators.packageJSON, options);
+  generate('tsconfig.json', generators.tsConfigJSON, options);
+  generate('.npmignore', generators.npmIgnore, options);
+  generate('.gitignore', generators.gitIgnore, options);
   // copy files
-  generate("rollup-base.config.js", generators.through, options);
-  generate("rollup-browser.config.js", generators.through, options);
-  generate("rollup.config.js", generators.through, options);
-  generate(".babelrc", generators.through, options);
-
+  generate('rollup-base.config.js', generators.through, options);
+  generate('rollup-browser.config.js', generators.through, options);
+  generate('rollup.config.js', generators.through, options);
+  generate('.babelrc', generators.through, options);
   // create src directories
   const entryDir = path.resolve(projectRootDir, path.dirname(options.entryFile));
   if (!fs.existsSync(entryDir)) fs.mkdirSync(entryDir, { recursive: true });
