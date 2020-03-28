@@ -21,8 +21,7 @@ module.exports = {
     json.author.name = options.author.name;
     json.author.email = options.author.email;
     // delete author.* if name or email is blank
-    if (json.author.email == '' && json.author.name == '') delete json.author;
-    else if (json.author.name == '') delete json.author.name;
+    if (json.author.name == '') delete json.author;
     else if (json.author.email == '') delete json.author.email;
     // delete 
     delete json.bundleDependencies;
