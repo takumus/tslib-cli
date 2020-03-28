@@ -2,12 +2,12 @@
   "name": "@takumus/tslib-cli",
   "version": "0.0.6",
   "description": "",
-  "main": "index.js",
+  "main": "../src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "tslib-cli": "./index.js"
+    "tslib-cli": "./src/index.js"
   },
   "author": "takumus <me@takum.us> (https://takum.us)",
   "license": "MIT",

@@ -7,7 +7,7 @@ const utils = require('./utils');
 const readline = require('./readline');
 const mkdirName = argv.run().targets[0] || '';
 const projectRootDir = path.resolve(process.cwd(), mkdirName);
-const libraryTemplateDir = './node_modules/@takumus/typescript-library-template'
+const libraryTemplateDir = '../node_modules/@takumus/typescript-library-template'
 const configFile = path.resolve(projectRootDir, 'tslib-cli.json');
 function init(options) {
   // make projectName from dir path
