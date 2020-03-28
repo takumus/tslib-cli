@@ -76,7 +76,7 @@ function generate(name, generator, options) {
     )
   );
 }
-(async function(){
+(async () =>{
   // default values
   const options = {
     projectName: '',
