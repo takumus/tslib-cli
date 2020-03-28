@@ -1,3 +1,4 @@
+const sortPackageJson = require('sort-package-json')
 function removeUnderScores(object) {
   const newObject = {};
   Object.keys(object).filter((key) => key.charAt(0) !== '_').forEach((key) => {
@@ -11,6 +12,7 @@ module.exports = {
     json.name = options.projectName;
     json.main = `${options.destDir}/index.cjs.js`;
     json.module = `${options.destDir}/index.esm.js`;
+    json.scripts.prebuild = `rimraf ${options.destDir}`;
     json.buildSettings.entry = options.entryFile;
     json.buildSettings.include = `${options.entryDir}/**/*`;
     json.buildSettings.iife.name = options.browserGlobalName;
@@ -25,7 +27,7 @@ module.exports = {
     // delete 
     delete json.bundleDependencies;
     delete json.deprecated;
-    return JSON.stringify(json, null, 2);
+    return sortPackageJson(JSON.stringify(json, null, 2));
   },
   tsConfigJSON(body, options) {
     const json = JSON.parse(body);
