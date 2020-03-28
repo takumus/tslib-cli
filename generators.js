@@ -35,13 +35,15 @@ module.exports = {
     return JSON.stringify(json, null, 2);
   },
   gitIgnore(body, options) {
-    body = `node_modules\n`;
-    body += options.destDir;
-    return body;
+    return [
+      'node_modules',
+      options.destDir
+    ].join('\n');
   },
   npmIgnore(body, options) {
-    body = `node_modules`;
-    return body;
+    return [
+      'node_modules'
+    ].join('\n');
   },
   through(body, options) {
     return body;
