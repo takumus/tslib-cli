@@ -43,7 +43,7 @@ module.exports = {
     body = `node_modules`;
     return body;
   },
-  nothing(body, options) {
+  through(body, options) {
     return body;
   }
 }

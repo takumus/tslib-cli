@@ -8,11 +8,13 @@ const projectRootDir = process.cwd();
 
 function init(options) {
   console.log(`create library at : ${projectRootDir}`);
+  // generate projectName from dir path
   options.projectName = path.basename(projectRootDir);
 }
 function input(options) {
   options.projectName = readlineStr('project name', options.projectName).toLowerCase();
   options.destDir = readlineStr('destination dir', options.destDir);
+  // generate default browserGlobalName from projectName
   options.browserGlobalName = readlineStr('global name for browser', toCamelCase(options.projectName));
   options.entryFile = readlineStr('entry file', options.entryFile);
   options.author.name = readlineStr('author.name', options.author.name);
@@ -31,10 +33,10 @@ function generateAll(options) {
   generate(".npmignore", generators.npmIgnore, options);
   generate(".gitignore", generators.gitIgnore, options);
   // copy files
-  generate("rollup-base.config.js", generators.nothing, options);
-  generate("rollup-browser.config.js", generators.nothing, options);
-  generate("rollup.config.js", generators.nothing, options);
-  generate(".babelrc", generators.nothing, options);
+  generate("rollup-base.config.js", generators.through, options);
+  generate("rollup-browser.config.js", generators.through, options);
+  generate("rollup.config.js", generators.through, options);
+  generate(".babelrc", generators.through, options);
 
   // create src directories
   const entryDir = path.resolve(projectRootDir, path.dirname(options.entryFile));
