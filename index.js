@@ -11,18 +11,11 @@ function init(options) {
   options.projectName = path.basename(projectRootDir);
 }
 function input(options) {
-  // input projectName
   options.projectName = readlineStr('project name', options.projectName).toLowerCase();
-  // input destDir
   options.destDir = readlineStr('destination dir', options.destDir);
-  // input browserGlobalName
-  const tmpBGN = toCamelCase(options.projectName);
-  options.browserGlobalName = readlineStr('global name for browser', tmpBGN);
-  // input entryFile
+  options.browserGlobalName = readlineStr('global name for browser', toCamelCase(options.projectName));
   options.entryFile = readlineStr('entry file', options.entryFile);
-  // input author
   options.author.name = readlineStr('author.name', options.author.name);
-  // input email
   options.author.email = readlineStr('author.email', options.author.name);
 }
 function beforeGenerate(options) {
@@ -43,9 +36,10 @@ function generateAll(options) {
   generate("rollup.config.js", generators.nothing, options);
   generate(".babelrc", generators.nothing, options);
 
-  // create tsfile and src directories
+  // create src directories
   const entryDir = path.resolve(projectRootDir, path.dirname(options.entryFile));
   if (!fs.existsSync(entryDir)) fs.mkdirSync(entryDir, { recursive: true });
+  // create ts file
   const tsFile = path.resolve(projectRootDir, options.entryFile);
   if (!fs.existsSync(tsFile)) fs.writeFileSync(tsFile, '', {});
 }
@@ -53,12 +47,6 @@ function afterGenerate(options) {
   console.log('complete!\nyou should run `npm install` and `npm run build`');
 }
 
-function readlineStr(message, defaultInput) {
-  const value = rl.question(`${message}(${defaultInput}):`, {
-    defaultInput: defaultInput
-  });
-  return value === '' ? defaultInput : value;
-}
 function generate(name, generator, options) {
   const file = path.resolve(__dirname, './node_modules/@takumus/typescript-library-template', name);
   let body = '';
@@ -72,6 +60,12 @@ function generate(name, generator, options) {
       options
     )
   );
+}
+function readlineStr(message, defaultInput) {
+  const value = rl.question(`${message}(${defaultInput}):`, {
+    defaultInput: defaultInput
+  });
+  return value === '' ? defaultInput : value;
 }
 function toCamelCase(value) {
   return value.split("-").map((v) => v.charAt(0).toUpperCase() + v.substr(1)).join('');
