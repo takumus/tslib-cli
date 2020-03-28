@@ -5,7 +5,6 @@ const path = require('path');
 const generators = require('./generators');
 const utils = require('./utils');
 const readline = require('./readline');
-//
 const mkdirName = argv.run().targets[0] || '';
 const projectRootDir = path.resolve(process.cwd(), mkdirName);
 const libraryTemplateDir = './node_modules/@takumus/typescript-library-template'
@@ -23,11 +22,10 @@ function init(options) {
       });
       console.log(`edit library at : ${projectRootDir}`);
       return;
-    }catch{}
+    } catch{ }
   }
   console.log(`create library at : ${projectRootDir}`);
 }
-
 async function input(options) {
   readline.open();
   options.projectName = (await readline.str('project name', options.projectName)).toLowerCase();
@@ -39,14 +37,12 @@ async function input(options) {
   options.author.email = (await readline.str('author.email', options.author.email));
   readline.close();
 }
-
 function beforeGenerate(options) {
   // create entryFileName from entryFile
   options.entryFileName = path.basename(options.entryFile, path.extname(options.entryFile));
   // create entryDir from entryFile
   options.entryDir = path.dirname(options.entryFile);
 }
-
 function generateAll(options) {
   // create project root directories
   if (!fs.existsSync(projectRootDir)) fs.mkdirSync(projectRootDir, { recursive: true });
@@ -67,18 +63,16 @@ function generateAll(options) {
   const tsFile = path.resolve(projectRootDir, options.entryFile);
   if (!fs.existsSync(tsFile)) fs.writeFileSync(tsFile, '', {});
 }
-
 function afterGenerate(options) {
   console.log(`complete!\nyou should ${mkdirName != '' ? `\`cd ${mkdirName}\` and ` : ''}run \`npm install\` and \`npm run build\``);
   fs.writeFileSync(configFile, JSON.stringify(options, null, 2));
 }
-
 function generate(name, generator, options) {
   const file = path.resolve(__dirname, libraryTemplateDir, name);
   let body = '';
   try {
     body = fs.readFileSync(file).toString();
-  }catch {}
+  } catch { }
   fs.writeFileSync(
     path.resolve(projectRootDir, name),
     generator(
@@ -87,7 +81,7 @@ function generate(name, generator, options) {
     )
   );
 }
-(async () =>{
+(async () => {
   // default values
   const options = {
     projectName: '',
@@ -101,7 +95,7 @@ function generate(name, generator, options) {
       email: ''
     }
   };
-  // do tasks
+  // tasks
   init(options);
   await input(options);
   beforeGenerate(options);
