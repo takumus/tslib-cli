@@ -69,7 +69,7 @@ function generateAll(options) {
 }
 
 function afterGenerate(options) {
-  console.log('complete!\nyou should run `npm install` and `npm run build`');
+  console.log(`complete!\nyou should ${mkdirName != '' ? `\`cd ${mkdirName}\` and ` : ''}run \`npm install\` and \`npm run build\``);
   fs.writeFileSync(configFile, JSON.stringify(options, null, 2));
 }
 
