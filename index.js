@@ -3,24 +3,31 @@ const fs = require('fs');
 const path = require('path');
 const generators = require('./generators');
 const utils = require('./utils');
+const readline = require('./readline');
 
 const projectRootDir = process.cwd();
 const libraryTemplateDir = './node_modules/@takumus/typescript-library-template'
-
+const configFile = path.resolve(projectRootDir, 'tslib-cli.json');
 function init(options) {
   console.log(`create library at : ${projectRootDir}`);
   // generate projectName from dir path
   options.projectName = path.basename(projectRootDir);
 }
 
-function input(options) {
-  options.projectName = utils.readlineStr('project name', options.projectName).toLowerCase();
-  options.destDir = utils.readlineStr('destination dir', options.destDir);
+async function input(options) {
+  // open input
+  readline.open();
+
+  options.projectName = (await readline.str('project name', options.projectName)).toLowerCase();
+  options.destDir = (await readline.str('destination dir', options.destDir));
   // generate default browserGlobalName from projectName
-  options.browserGlobalName = utils.readlineStr('global name for browser', utils.toBrowserName(options.projectName));
-  options.entryFile = utils.readlineStr('entry file', options.entryFile);
-  options.author.name = utils.readlineStr('author.name', options.author.name);
-  options.author.email = utils.readlineStr('author.email', options.author.name);
+  options.browserGlobalName = (await readline.str('global name for browser', utils.toBrowserName(options.projectName)));
+  options.entryFile = (await readline.str('entry file', options.entryFile));
+  options.author.name = (await readline.str('author.name', options.author.name));
+  options.author.email = (await readline.str('author.email', options.author.email));
+
+  // open input
+  readline.close();
 }
 
 function beforeGenerate(options) {
@@ -52,6 +59,7 @@ function generateAll(options) {
 
 function afterGenerate(options) {
   console.log('complete!\nyou should run `npm install` and `npm run build`');
+  fs.writeFileSync(configFile, JSON.stringify(options, null, 2));
 }
 
 function generate(name, generator, options) {
@@ -68,7 +76,7 @@ function generate(name, generator, options) {
     )
   );
 }
-(() => {
+(async function(){
   // default values
   const options = {
     projectName: '',
@@ -84,7 +92,7 @@ function generate(name, generator, options) {
   };
   // do tasks
   init(options);
-  input(options);
+  await input(options);
   beforeGenerate(options);
   generateAll(options);
   afterGenerate(options);
