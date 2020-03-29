@@ -1,4 +1,4 @@
-import {PackageJSON} from './package.json';
+import { PackageJSON } from './package.json';
 import Settings from './settings';
 import sortPackageJson from 'sort-package-json';
 import utils from './utils';

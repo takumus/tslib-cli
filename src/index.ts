@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import argv from 'argv';
-import fs  from 'fs';
+import fs from 'fs';
 import path from 'path';
 import utils from './utils';
 import readline from './readline';
 import Settings from './settings';
-import {generators, GeneratorFunction} from './generators';
+import { generators, GeneratorFunction } from './generators';
 
 const mkdirName = argv.run().targets[0] || '';
 const projectRootDir = path.resolve(process.cwd(), mkdirName);
