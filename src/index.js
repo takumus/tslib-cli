@@ -35,13 +35,13 @@ async function input(settings) {
   readline.open();
   settings.projectName = (await readline.str('project name', settings.projectName)).toLowerCase();
   // make default browserGlobalName from projectName
-  settings.browserGlobalName = await readline.str('browser global name', utils.toBrowserName(settings.projectName));
-  settings.destDir = await readline.str('destination dir', settings.destDir);
-  settings.entryFile = await readline.str('entry ts file', settings.entryFile);
-  settings.cjsesmIncludesNodeModules = await readline.yn('`cjs` and `esm` includes `node_modules`?', settings.cjsesmIncludesNodeModules);
-  settings.browserIncludesNodeModules = await readline.yn('`browser` includes `node_modules`?', settings.browserIncludesNodeModules);
-  settings.author.name = await readline.str('npm author.name', settings.author.name);
-  settings.author.email = await readline.str('npm author.email', settings.author.email);
+  settings.browserGlobalName = await readline.str('global name of `browser`', utils.toBrowserName(settings.projectName));
+  settings.destDir = await readline.str('destination directory', settings.destDir);
+  settings.entryFile = await readline.str('entry .ts file', settings.entryFile);
+  settings.cjsesmIncludesNodeModules = await readline.yn('export `cjs` and `ems` with `node_modules`?', settings.cjsesmIncludesNodeModules);
+  settings.browserIncludesNodeModules = await readline.yn('export `browser` with node_modules?', settings.browserIncludesNodeModules);
+  settings.author.name = await readline.str('package.json author.name', settings.author.name);
+  settings.author.email = await readline.str('package.json author.email', settings.author.email);
   readline.close();
 }
 function beforeGenerate(settings) {
