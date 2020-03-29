@@ -1,4 +1,5 @@
-const sortPackageJson = require('sort-package-json')
+const sortPackageJson = require('sort-package-json');
+const utils = require('./utils');
 function removeUnderScores(object) {
   const newObject = {};
   Object.keys(object).filter((key) => key.charAt(0) !== '_').forEach((key) => {
@@ -17,6 +18,7 @@ module.exports = {
     json.buildSettings.include = `${options.entryDir}/**/*`;
     json.buildSettings.iife.name = options.browserGlobalName;
     json.buildSettings.iife.file = `${options.destDir}/index.iife.js`;
+    json.buildSettings.iife.browserIncludesNodeModules = options.browserIncludesNodeModules;
     json.types = `${options.destDir}/types/${options.entryFileName}.d.ts`;
     json.author.name = options.author.name;
     json.author.email = options.author.email;
@@ -26,14 +28,14 @@ module.exports = {
     // delete 
     delete json.bundleDependencies;
     delete json.deprecated;
-    return sortPackageJson(JSON.stringify(json, null, 2));
+    return sortPackageJson(utils.toFormattedJson(json));
   },
   tsConfigJSON(body, options) {
     const json = JSON.parse(body);
     json.compilerOptions.declarationDir = `${options.destDir}/types`;
     json.include = [`${options.entryDir}/**/*`];
     json.exclude = ['node_modules', options.destDir];
-    return JSON.stringify(json, null, 2);
+    return utils.toFormattedJson(json);
   },
   gitIgnore(body, options) {
     return [

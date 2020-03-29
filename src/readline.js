@@ -14,6 +14,13 @@ module.exports = {
       });
     });
   },
+  yn(message, defaultInput) {
+    return new Promise((resolve) => {
+      interface.question(`${message}: (${defaultInput ? 'yes' : 'no'})`, (answer) => {
+        resolve(answer == '' ? defaultInput : /yY/.test(answer));
+      });
+    });
+  },
   close() {
     interface.close();
   }
