@@ -9,15 +9,15 @@ module.exports = {
   },
   str(message, defaultInput) {
     return new Promise((resolve) => {
-      interface.question(`${message}: (${defaultInput})`, (answer) => {
+      interface.question(`${message}: (${defaultInput}) `, (answer) => {
         resolve(answer == '' ? defaultInput : answer);
       });
     });
   },
   yn(message, defaultInput) {
     return new Promise((resolve) => {
-      interface.question(`${message}: (${defaultInput ? 'yes' : 'no'})`, (answer) => {
-        resolve(answer == '' ? defaultInput : /yY/.test(answer));
+      interface.question(`${message}: (${defaultInput ? 'yes' : 'no'}) `, (answer) => {
+        resolve(answer == '' ? defaultInput : /y|Y/.test(answer));
       });
     });
   },
