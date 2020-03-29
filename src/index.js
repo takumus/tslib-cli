@@ -5,14 +5,15 @@ const path = require('path');
 const generators = require('./generators');
 const utils = require('./utils');
 const readline = require('./readline');
-const packageVersion = require('../package.json').version;
-console.log(packageVersion);
+const package = require('../package.json');
+
 const mkdirName = argv.run().targets[0] || '';
 const projectRootDir = path.resolve(process.cwd(), mkdirName);
 const libraryTemplateDir = '../node_modules/@takumus/typescript-library-template'
 const currentSettiingFile = path.resolve(projectRootDir, 'tslib-cli.json');
 // tasks
 function init(settings) {
+  console.log(`${package.name.split('/').pop()} v${package.version}`);
   // make projectName from dir path
   settings.projectName = path.basename(projectRootDir);
   // load current settings if exists
@@ -23,7 +24,7 @@ function init(settings) {
       Object.keys(old).forEach((key) => {
         settings[key] = old[key];
       });
-      settings.version = packageVersion;
+      settings.version = package.version;
       console.log(`edit library at : ${projectRootDir}`);
       return;
     } catch{ }
@@ -82,7 +83,7 @@ function afterGenerate(settings) {
 (async () => {
   // default values
   const settings = {
-    version: packageVersion,
+    version: package.version,
     projectName: '',
     browserGlobalName: '',
     browserIncludesNodeModules: true,
