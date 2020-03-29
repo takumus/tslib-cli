@@ -25,11 +25,11 @@ function init(settings) {
         settings[key] = old[key];
       });
       settings.version = package.version;
-      console.log(`edit library at : ${projectRootDir}`);
+      console.log(`edit project in : ${projectRootDir}`);
       return;
     } catch{ }
   }
-  console.log(`create library at : ${projectRootDir}`);
+  console.log(`create project in : ${projectRootDir}`);
 }
 async function input(settings) {
   readline.open();
@@ -38,8 +38,8 @@ async function input(settings) {
   settings.browserGlobalName = await readline.str('global name of `browser`', utils.toBrowserName(settings.projectName));
   settings.destDir = await readline.str('destination directory', settings.destDir);
   settings.entryFile = await readline.str('entry .ts file', settings.entryFile);
-  settings.cjsesmIncludesNodeModules = await readline.yn('export `cjs` and `ems` with `node_modules`?', settings.cjsesmIncludesNodeModules);
-  settings.browserIncludesNodeModules = await readline.yn('export `browser` with node_modules?', settings.browserIncludesNodeModules);
+  settings.cjsesmExportWithNodeModules = await readline.yn('export `cjs` and `ems` with `node_modules`?', settings.cjsesmExportWithNodeModules);
+  settings.browserExportWithNodeModules = await readline.yn('export `browser` with node_modules?', settings.browserExportWithNodeModules);
   settings.author.name = await readline.str('package.json author.name', settings.author.name);
   settings.author.email = await readline.str('package.json author.email', settings.author.email);
   readline.close();
@@ -87,8 +87,8 @@ function afterGenerate(settings) {
     version: package.version,
     projectName: '',
     browserGlobalName: '',
-    browserIncludesNodeModules: true,
-    cjsesmIncludesNodeModules: false,
+    browserExportWithNodeModules: true,
+    cjsesmExportWithNodeModules: false,
     destDir: './dist',
     entryFile: './src/index.ts',
     entryFileName: '',
