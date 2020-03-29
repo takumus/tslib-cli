@@ -8,15 +8,16 @@ const readline = require('./readline');
 const mkdirName = argv.run().targets[0] || '';
 const projectRootDir = path.resolve(process.cwd(), mkdirName);
 const libraryTemplateDir = '../node_modules/@takumus/typescript-library-template'
-const configFile = path.resolve(projectRootDir, 'tslib-cli.json');
+const currentSettiingFile = path.resolve(projectRootDir, 'tslib-cli.json');
+// tasks
 function init(options) {
   // make projectName from dir path
   options.projectName = path.basename(projectRootDir);
-  // load old settings if exists
-  if (fs.existsSync(configFile)) {
+  // load current settings if exists
+  if (fs.existsSync(currentSettiingFile)) {
     try {
       // extract
-      const old = JSON.parse(fs.readFileSync(configFile));
+      const old = JSON.parse(fs.readFileSync(currentSettiingFile));
       Object.keys(old).forEach((key) => {
         options[key] = old[key];
       });
@@ -44,6 +45,14 @@ function beforeGenerate(options) {
   options.entryDir = path.dirname(options.entryFile);
 }
 function generateAll(options) {
+  // generate function
+  const generate = (name, generator, options) => {
+    let body = '';
+    try {
+      body = fs.readFileSync(path.resolve(__dirname, libraryTemplateDir, name)).toString();
+    } catch { }
+    fs.writeFileSync(path.resolve(projectRootDir, name), generator(body, options));
+  }
   // create project root directories
   if (!fs.existsSync(projectRootDir)) fs.mkdirSync(projectRootDir, { recursive: true });
   // generate files
@@ -64,21 +73,7 @@ function generateAll(options) {
 }
 function afterGenerate(options) {
   console.log(`complete!\nyou should ${mkdirName != '' ? `\`cd ${mkdirName}\` and ` : ''}run \`npm install\` and \`npm run build\``);
-  fs.writeFileSync(configFile, JSON.stringify(options, null, 2));
-}
-function generate(name, generator, options) {
-  const file = path.resolve(__dirname, libraryTemplateDir, name);
-  let body = '';
-  try {
-    body = fs.readFileSync(file).toString();
-  } catch { }
-  fs.writeFileSync(
-    path.resolve(projectRootDir, name),
-    generator(
-      body,
-      options
-    )
-  );
+  fs.writeFileSync(currentSettiingFile, JSON.stringify(options, null, 2));
 }
 (async () => {
   // default values

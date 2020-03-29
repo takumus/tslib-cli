@@ -9,7 +9,7 @@ module.exports = {
   },
   str(message, defaultInput) {
     return new Promise((resolve) => {
-      interface.question(`${message}(${defaultInput}):`, (answer) => {
+      interface.question(`${message}: (${defaultInput})`, (answer) => {
         resolve(answer == '' ? defaultInput : answer);
       });
     });
