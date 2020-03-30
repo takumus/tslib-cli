@@ -30,3 +30,8 @@ Default value is `its project name` in camel-case.
 SSIA
 ### package.json author.email
 SSIA
+
+# Build
+```
+npm run build
+```
