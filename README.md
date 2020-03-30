@@ -22,7 +22,7 @@ Default value is `its project name` in camel-case.
 `./src/index.ts` is default value.
 ### export `cjs` with node_modules?
 `no` is default value.
-### export `ems` with node_modules?
+### export `esm` with node_modules?
 `no` is default value.
 ### export `browser` with node_modules?
 `yes` is default value.
