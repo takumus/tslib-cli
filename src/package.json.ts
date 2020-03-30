@@ -12,7 +12,11 @@ export interface Browser {
   exportWithNodeModules: boolean;
 }
 
-export interface CjsEsm {
+export interface Cjs {
+  exportWithNodeModules: boolean;
+}
+
+export interface Esm {
   exportWithNodeModules: boolean;
 }
 
@@ -20,7 +24,8 @@ export interface BuildSettings {
   entry: string;
   include: string;
   browser: Browser;
-  cjs_esm: CjsEsm;
+  cjs: Cjs;
+  esm: Esm;
   outputIgnoreLog: boolean;
 }
 export interface Author {

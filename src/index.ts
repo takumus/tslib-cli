@@ -48,9 +48,13 @@ async function input(settings: Settings) {
     'entry .ts file',
     settings.entryFile
   );
-  settings.cjsesmExportWithNodeModules = await readline.yn(
-    'export `cjs` and `ems` with `node_modules`?',
-    settings.cjsesmExportWithNodeModules
+  settings.cjsExportWithNodeModules = await readline.yn(
+    'export `cjs` with `node_modules`?',
+    settings.cjsExportWithNodeModules
+  );
+  settings.esmExportWithNodeModules = await readline.yn(
+    'export `esm` with `node_modules`?',
+    settings.esmExportWithNodeModules
   );
   settings.browserExportWithNodeModules = await readline.yn(
     'export `browser` with `node_modules`?',
@@ -90,8 +94,10 @@ function generateAll(settings: Settings) {
   generate('.gitignore', generators.gitIgnore, settings);
   generate('rollup-base.config.js', generators.through, settings);
   generate('rollup-browser.config.js', generators.through, settings);
-  generate('rollup.config.js', generators.through, settings);
+  generate('rollup-cjs.config.js', generators.through, settings);
+  generate('rollup-esm.config.js', generators.through, settings);
   generate('.babelrc', generators.through, settings);
+  generate('build.js', generators.through, settings);
   // create src directories
   const entryDir = path.resolve(projectRootDir, path.dirname(settings.entryFile));
   if (!fs.existsSync(entryDir)) fs.mkdirSync(entryDir, { recursive: true });
@@ -109,7 +115,8 @@ function afterGenerate(settings: Settings) {
     projectName: '',
     browserGlobalName: '',
     browserExportWithNodeModules: true,
-    cjsesmExportWithNodeModules: false,
+    cjsExportWithNodeModules: false,
+    esmExportWithNodeModules: false,
     destDir: './dist',
     entryFile: './src/index.ts',
     entryFileName: '',
