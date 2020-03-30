@@ -1,3 +1,6 @@
+# What is this?
+This is a TypeScript library template generator.  
+Using [this template](https://github.com/takumus/TypeScriptLibraryTemplate).
 # Install
 ```
 npm install -g @takumus/tslib-cli
