@@ -38,3 +38,6 @@ SSIA
 ```
 npm run build
 ```
+
+# Supporters
+[@shxn0](https://github.com/shxn0) (Japanese to English translation)
