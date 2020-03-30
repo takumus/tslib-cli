@@ -23,11 +23,11 @@ Default value is `its project name` in camel-case.
 `./dist` is default value.
 ### entry .ts file
 `./src/index.ts` is default value.
-### export `cjs` with node_modules?
+### export `cjs` with `node_modules`?
 `no` is default value.
-### export `esm` with node_modules?
+### export `esm` with `node_modules`?
 `no` is default value.
-### export `browser` with node_modules?
+### export `browser` with `node_modules`?
 `yes` is default value.
 ### package.json author.name
 SSIA
