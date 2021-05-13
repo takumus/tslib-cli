@@ -25,11 +25,10 @@ export const generators = {
     json.buildSettings.cjs.exportWithNodeModules = settings.cjsExportWithNodeModules;
     json.buildSettings.esm.exportWithNodeModules = settings.esmExportWithNodeModules;
     json.types = `${settings.destDir}/types/${settings.entryFileName}.d.ts`;
-    json.author.name = settings.author.name;
-    json.author.email = settings.author.email;
-    // delete author.* if name or email is blank
-    if (json.author.name == '') delete json.author;
-    else if (json.author.email == '') delete json.author.email;
+    json.author = settings.author;
+    // // delete author.* if name or email is blank
+    // if (!json.author || json.author.name == '') delete json.author;
+    // else if (json.author.email == '') delete json.author.email;
     // delete 
     delete json.bundleDependencies;
     delete json.deprecated;

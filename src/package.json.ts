@@ -30,7 +30,7 @@ export interface BuildSettings {
 }
 export interface Author {
   name: string;
-  email: string;
+  email?: string;
 }
 export interface PackageJSON {
   name: string;
@@ -42,7 +42,7 @@ export interface PackageJSON {
   types: string;
   scripts: Scripts;
   buildSettings: BuildSettings;
-  author: Author;
+  author?: Author;
   bundleDependencies: any;
   deprecated: any;
 }
